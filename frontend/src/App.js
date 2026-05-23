@@ -12,6 +12,11 @@ import { SkuRow } from "./components/SkuRow";
 
 function App() {
   const [filter, setFilter] = useState("all");
+  // Cache recommendations across filter toggles so we don't re-call Claude
+  // every time the user clicks a triage pill (which remounts SkuRow).
+  const [recCache, setRecCache] = useState({});
+  const handleRecLoaded = (skuId, data) =>
+    setRecCache((prev) => (prev[skuId] ? prev : { ...prev, [skuId]: data }));
 
   const triaged = useMemo(() => sortByPriority(triageAll(SKUS)), []);
   const counts = useMemo(() => countByBucket(triaged), [triaged]);
@@ -47,7 +52,12 @@ function App() {
 
         <div className="flex flex-col gap-2" data-testid="sku-list">
           {visible.map((sku) => (
-            <SkuRow key={sku.id} sku={sku} />
+            <SkuRow
+              key={sku.id}
+              sku={sku}
+              cachedRec={recCache[sku.id]}
+              onRecLoaded={handleRecLoaded}
+            />
           ))}
           {visible.length === 0 && (
             <div

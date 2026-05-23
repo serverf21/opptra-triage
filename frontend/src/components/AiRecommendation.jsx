@@ -16,12 +16,14 @@ function enqueue(fn) {
 
 /**
  * Inline AI recommendation for a single SKU.
- * Auto-loads on mount (queued), exposes retry on error.
- * Calls onLoaded(data) so the parent can capture suggestedPrice for the Apply button.
+ * - On mount: if a cached value is present, render it instantly (no fetch).
+ *   Otherwise, queue a fetch and persist the result to the parent cache.
+ * - Exposes a Retry on error.
  */
-export function AiRecommendation({ sku, onLoaded }) {
-  const [state, setState] = useState("loading"); // loading | ok | error
-  const [data, setData] = useState(null);
+export function AiRecommendation({ sku, cached, onLoaded }) {
+  const initial = cached ? "ok" : "loading";
+  const [state, setState] = useState(initial); // loading | ok | error
+  const [data, setData] = useState(cached || null);
   const [errMsg, setErrMsg] = useState("");
   const mounted = useRef(true);
 
@@ -40,7 +42,7 @@ export function AiRecommendation({ sku, onLoaded }) {
       if (!mounted.current) return;
       setData(res);
       setState("ok");
-      onLoaded?.(res);
+      onLoaded?.(sku.id, res);
     } catch (e) {
       if (!mounted.current) return;
       setErrMsg(e?.message || "Network error");
@@ -49,6 +51,7 @@ export function AiRecommendation({ sku, onLoaded }) {
   }
 
   useEffect(() => {
+    if (cached) return; // already have it — no fetch
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

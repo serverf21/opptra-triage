@@ -27,12 +27,18 @@ const BUY_BOX_TAG = {
   lost: "text-[#EF4444] border-[#EF4444]/40",
 };
 
-export function SkuRow({ sku }) {
+export function SkuRow({ sku, cachedRec, onRecLoaded }) {
   const [repriced, setRepriced] = useState(false);
-  const [recData, setRecData] = useState(null);
+  const [localRec, setLocalRec] = useState(cachedRec || null);
+  const recData = cachedRec || localRec;
   const isBlocked = sku.bucket === BUCKETS.BLOCKED;
   const isActionable =
     sku.bucket === BUCKETS.ACTION || sku.bucket === BUCKETS.OPPORTUNITY;
+
+  const handleLoaded = (skuId, data) => {
+    setLocalRec(data);
+    onRecLoaded?.(skuId, data);
+  };
 
   const currentPrice = repriced && recData ? recData.suggestedPrice : sku.ourPrice;
   const deltaAbs = currentPrice - sku.competitorPrice;
@@ -167,7 +173,7 @@ export function SkuRow({ sku }) {
             </p>
           </div>
         ) : isActionable ? (
-          <AiRecommendation sku={sku} onLoaded={setRecData} />
+          <AiRecommendation sku={sku} cached={cachedRec} onLoaded={handleLoaded} />
         ) : (
           <p
             className="text-xs text-[#52525A] uppercase tracking-widest"
