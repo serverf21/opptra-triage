@@ -1,3 +1,5 @@
+import { buildPricingContext } from "./pricingContext";
+
 // Pure classification — no React, no side effects. Easy to unit test or swap.
 // Bucket logic per brief:
 //   - ACTION:      Lost buy box AND (ourPrice - 1) > marginFloor  (a cut is possible)
@@ -28,7 +30,11 @@ export function classifySku(sku) {
 }
 
 export function triageAll(skus) {
-  return skus.map((s) => ({ ...s, bucket: classifySku(s) }));
+  return skus.map((s) => {
+    const bucket = classifySku(s);
+    const pricingContext = buildPricingContext(s);
+    return { ...s, bucket, pricingContext };
+  });
 }
 
 const PRIORITY = {

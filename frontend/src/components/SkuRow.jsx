@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Check, Lock, TrendingDown, TrendingUp } from "lucide-react";
 import { AiRecommendation } from "./AiRecommendation";
+import { PricingSignals } from "./PricingSignals";
 import { BUCKETS, daysSince, formatRupee } from "../lib/triage";
 
 const BUCKET_TAG = {
@@ -58,7 +59,7 @@ export function SkuRow({ sku, cachedRec, onRecLoaded }) {
     <div
       data-testid={`sku-row-${sku.id}`}
       data-bucket={sku.bucket}
-      className={`${rowBase} ${rowSkin}`}
+      className={`${rowBase} ${rowSkin} !grid-rows-[auto_auto]`}
     >
       {/* Column 1: SKU + Brand + Bucket tag */}
       <div className="col-span-12 md:col-span-2 flex flex-col gap-1.5">
@@ -213,6 +214,8 @@ export function SkuRow({ sku, cachedRec, onRecLoaded }) {
           </button>
         )}
       </div>
+
+      <PricingSignals sku={sku} />
     </div>
   );
 }

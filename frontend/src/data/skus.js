@@ -1,10 +1,15 @@
 /* eslint-disable */
-// 8 SKUs designed to produce: 5 ACTION needed, 2 OPPORTUNITY, 1 BLOCKED (SKU-007).
-// Prices are in INR. lastChanged is an ISO date string.
+// 8 SKUs: 5 ACTION, 2 OPPORTUNITY, 1 BLOCKED (SKU-007).
+// Extended with mock historical, cross-platform, and inventory data for local pricing context.
 const today = new Date();
 const daysAgo = (n) => {
   const d = new Date(today);
   d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+};
+const daysAhead = (n) => {
+  const d = new Date(today);
+  d.setDate(d.getDate() + n);
   return d.toISOString().slice(0, 10);
 };
 
@@ -13,80 +18,200 @@ export const SKUS = [
     id: "SKU-001",
     brand: "Aurelio",
     category: "Apparel",
+    listingPlatform: "flipkart",
     ourPrice: 1299,
     competitorPrice: 1199,
     marginFloor: 1050,
     buyBoxStatus: "lost",
     lastChanged: daysAgo(11),
+    crossPlatform: { amazon: 1185, meesho: 1149 },
+    historical12m: {
+      avgPrice: 1240,
+      minPrice: 1099,
+      maxPrice: 1399,
+      yoyTrendPct: 4.2,
+      peakSeason: "Oct–Nov (festive)",
+    },
+    inventory: {
+      unitsOnHand: 420,
+      dailySales: 18,
+      dailyInbound: 20,
+      nextReplenishmentDate: daysAhead(12),
+    },
   },
   {
     id: "SKU-002",
     brand: "Norvana",
     category: "Electronics",
+    listingPlatform: "flipkart",
     ourPrice: 4499,
     competitorPrice: 4250,
     marginFloor: 3800,
     buyBoxStatus: "lost",
     lastChanged: daysAgo(4),
+    crossPlatform: { amazon: 4199, meesho: 4399 },
+    historical12m: {
+      avgPrice: 4620,
+      minPrice: 3999,
+      maxPrice: 4999,
+      yoyTrendPct: -2.1,
+      peakSeason: "Sep (BBD) + Jul (Prime)",
+    },
+    inventory: {
+      unitsOnHand: 85,
+      dailySales: 9,
+      dailyInbound: 4,
+      nextReplenishmentDate: daysAhead(18),
+    },
   },
   {
     id: "SKU-003",
     brand: "Kestrel",
     category: "Home",
+    listingPlatform: "flipkart",
     ourPrice: 899,
     competitorPrice: 849,
     marginFloor: 720,
     buyBoxStatus: "lost",
     lastChanged: daysAgo(22),
+    crossPlatform: { amazon: 859, meesho: 829 },
+    historical12m: {
+      avgPrice: 870,
+      minPrice: 799,
+      maxPrice: 949,
+      yoyTrendPct: 1.5,
+      peakSeason: "May–Jun (summer)",
+    },
+    inventory: {
+      unitsOnHand: 310,
+      dailySales: 11,
+      dailyInbound: 12,
+      nextReplenishmentDate: daysAhead(8),
+    },
   },
   {
     id: "SKU-004",
     brand: "Verdant",
     category: "Beauty",
+    listingPlatform: "flipkart",
     ourPrice: 599,
     competitorPrice: 559,
     marginFloor: 480,
     buyBoxStatus: "lost",
     lastChanged: daysAgo(7),
+    crossPlatform: { amazon: 549, meesho: 569 },
+    historical12m: {
+      avgPrice: 585,
+      minPrice: 499,
+      maxPrice: 649,
+      yoyTrendPct: 6.0,
+      peakSeason: "Mar (Holi) + Nov (Diwali)",
+    },
+    inventory: {
+      unitsOnHand: 600,
+      dailySales: 22,
+      dailyInbound: 22,
+      nextReplenishmentDate: daysAhead(14),
+    },
   },
   {
     id: "SKU-005",
     brand: "Halcyon",
     category: "Outdoor",
+    listingPlatform: "flipkart",
     ourPrice: 2199,
     competitorPrice: 1999,
     marginFloor: 1750,
     buyBoxStatus: "lost",
     lastChanged: daysAgo(31),
+    crossPlatform: { amazon: 2049, meesho: 1929 },
+    historical12m: {
+      avgPrice: 2080,
+      minPrice: 1799,
+      maxPrice: 2299,
+      yoyTrendPct: 3.8,
+      peakSeason: "May–Jun (summer)",
+    },
+    inventory: {
+      unitsOnHand: 120,
+      dailySales: 7,
+      dailyInbound: 3,
+      nextReplenishmentDate: daysAhead(21),
+    },
   },
   {
     id: "SKU-006",
     brand: "Brio",
     category: "Kitchen",
+    listingPlatform: "flipkart",
     ourPrice: 749,
     competitorPrice: 999,
     marginFloor: 600,
     buyBoxStatus: "won",
     lastChanged: daysAgo(18),
+    crossPlatform: { amazon: 979, meesho: 959 },
+    historical12m: {
+      avgPrice: 820,
+      minPrice: 699,
+      maxPrice: 999,
+      yoyTrendPct: -5.0,
+      peakSeason: "Oct–Nov (festive)",
+    },
+    inventory: {
+      unitsOnHand: 240,
+      dailySales: 8,
+      dailyInbound: 10,
+      nextReplenishmentDate: daysAhead(10),
+    },
   },
   {
     id: "SKU-007",
     brand: "Lumen",
     category: "Stationery",
+    listingPlatform: "flipkart",
     ourPrice: 449,
     competitorPrice: 399,
     marginFloor: 420,
     buyBoxStatus: "lost",
     lastChanged: daysAgo(2),
+    crossPlatform: { amazon: 389, meesho: 379 },
+    historical12m: {
+      avgPrice: 455,
+      minPrice: 399,
+      maxPrice: 499,
+      yoyTrendPct: 0.5,
+      peakSeason: "Jun–Jul (back-to-school)",
+    },
+    inventory: {
+      unitsOnHand: 900,
+      dailySales: 5,
+      dailyInbound: 6,
+      nextReplenishmentDate: daysAhead(20),
+    },
   },
   {
     id: "SKU-008",
     brand: "Sablon",
     category: "Footwear",
+    listingPlatform: "flipkart",
     ourPrice: 1199,
     competitorPrice: 1399,
     marginFloor: 1000,
     buyBoxStatus: "won",
     lastChanged: daysAgo(14),
+    crossPlatform: { amazon: 1369, meesho: 1349 },
+    historical12m: {
+      avgPrice: 1280,
+      minPrice: 1099,
+      maxPrice: 1499,
+      yoyTrendPct: 2.2,
+      peakSeason: "Oct–Nov (festive)",
+    },
+    inventory: {
+      unitsOnHand: 175,
+      dailySales: 6,
+      dailyInbound: 7,
+      nextReplenishmentDate: daysAhead(16),
+    },
   },
 ];

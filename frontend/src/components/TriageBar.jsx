@@ -1,5 +1,6 @@
 import React from "react";
 import { BUCKETS } from "../lib/triage";
+import { getActiveMarketEvents } from "../data/marketCalendar";
 
 const FILTERS = [
   { key: "all", label: "ALL" },
@@ -24,6 +25,9 @@ const COUNT_COLOR = {
 
 export function TriageBar({ counts, activeFilter, onChange, total }) {
   const valueFor = (key) => (key === "all" ? total : counts[key] || 0);
+  const marketEvents = getActiveMarketEvents();
+  const activeSales = marketEvents.filter((e) => e.phase === "active");
+
   return (
     <div
       className="flex flex-wrap items-end gap-2 mb-6 border-b border-[#262626] pb-4 sticky top-0 bg-[#050505] z-50"
@@ -44,6 +48,22 @@ export function TriageBar({ counts, activeFilter, onChange, total }) {
             {counts.blocked} blocked
           </span>
         </h1>
+        {activeSales.length > 0 && (
+          <p
+            className="mt-1 text-[10px] font-mono uppercase tracking-widest text-[#007AFF]"
+            data-testid="market-calendar-banner"
+          >
+            Marketplace window: {activeSales.map((e) => e.name).join(" · ")}
+          </p>
+        )}
+        {activeSales.length === 0 && marketEvents.length > 0 && (
+          <p
+            className="mt-1 text-[10px] font-mono uppercase tracking-widest text-[#52525A]"
+            data-testid="market-calendar-banner"
+          >
+            Next: {marketEvents[0].name} in {marketEvents[0].daysUntilStart}d
+          </p>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-0">

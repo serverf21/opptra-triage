@@ -102,17 +102,24 @@ export function AiRecommendation({ sku, cached, onLoaded }) {
       className="flex items-start gap-2"
     >
       <Sparkles className="h-3.5 w-3.5 text-[#007AFF] shrink-0 mt-0.5" />
-      <p
-        className="text-sm text-[#D4D4D4] leading-snug"
-        style={{ fontFamily: "DM Sans, sans-serif" }}
-      >
-        {data?.recommendation}
-        {data?.source === "fallback" && (
-          <span className="ml-2 text-[10px] uppercase tracking-widest text-[#52525A] font-mono">
-            · heuristic
-          </span>
+      <div className="flex-1 min-w-0">
+        <p
+          className="text-sm text-[#D4D4D4] leading-snug"
+          style={{ fontFamily: "DM Sans, sans-serif" }}
+        >
+          {data?.recommendation}
+          {data?.source === "fallback" && (
+            <span className="ml-2 text-[10px] uppercase tracking-widest text-[#52525A] font-mono">
+              · heuristic
+            </span>
+          )}
+        </p>
+        {data?.adjustmentsApplied?.length > 0 && (
+          <p className="mt-1 text-[10px] text-[#007AFF] font-mono">
+            {data.adjustmentsApplied.join(" ")}
+          </p>
         )}
-      </p>
+      </div>
     </div>
   );
 }

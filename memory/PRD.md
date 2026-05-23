@@ -14,10 +14,8 @@ SKU-007 (competitor priced below margin floor).
 ## Architecture
 - React frontend (CRA), TailwindCSS, dark terminal aesthetic (JetBrains Mono /
   Chivo / DM Sans).
-- FastAPI backend proxying Claude via `emergentintegrations`
-  (`anthropic / claude-4-sonnet-20250514`).
-- `EMERGENT_LLM_KEY` is the default; user can drop their own
-  `ANTHROPIC_API_KEY` in `backend/.env` to override.
+- FastAPI backend proxying OpenAI (`OPENAI_API_KEY`, default model
+  `gpt-4o-mini`) for per-SKU pricing recommendations.
 - No MongoDB usage yet — state is in React only (per brief: "no backend
   needed", we kept backend strictly for the LLM proxy).
 
@@ -35,8 +33,8 @@ SKU-007 (competitor priced below margin floor).
    no AI call, no Apply.
 
 ## What's been implemented (2026-02)
-- [x] Backend `POST /api/recommend` + `GET /api/health` (Claude via
-  emergentintegrations, deterministic fallback when LLM unavailable).
+- [x] Backend `POST /api/recommend` + `GET /api/health` (OpenAI via official
+  SDK, deterministic fallback when LLM unavailable).
 - [x] Frontend triage engine + 4-pill filter bar with live counters.
 - [x] 8 SKUs (5 action, 2 opportunity, 1 blocked = SKU-007).
 - [x] Dense terminal-aesthetic SKU rows with semantic deltas.

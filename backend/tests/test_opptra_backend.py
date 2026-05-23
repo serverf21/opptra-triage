@@ -46,7 +46,7 @@ class TestRecommend:
         assert len(d["recommendation"]) > 5
         # one sentence (roughly)
         assert d["recommendation"].count(".") <= 4
-        assert d.get("source") in {"claude", "fallback"}
+        assert d.get("source") in {"openai", "fallback"}
         assert isinstance(d.get("suggestedPrice"), (int, float))
         assert d["suggestedPrice"] >= payload["marginFloor"]
 
@@ -63,7 +63,7 @@ class TestRecommend:
         r = api_client.post(f"{BASE_URL}/api/recommend", json=payload, timeout=60)
         assert r.status_code == 200
         d = r.json()
-        assert d.get("source") in {"claude", "fallback"}
+        assert d.get("source") in {"openai", "fallback"}
         assert d["suggestedPrice"] >= payload["marginFloor"]
         assert isinstance(d.get("recommendation"), str) and len(d["recommendation"]) > 5
 
