@@ -1,0 +1,34 @@
+{
+  "summary": "Full backend + frontend testing of Opptra Pricing Signal Tool. All 5 backend pytest cases passed (health, action recommend, opportunity recommend, invalid bucket 400, missing field 422). Frontend functionally complete: triage bar shows '5 need action · 2 opportunity · 1 blocked', filter pills show 08/05/02/01 with correct row counts on click, SKU-007 renders blocked-message with no apply-button and never triggers /api/recommend, all 7 actionable SKUs render ai-rec-ok within ~15s via the serialized client queue, and clicking apply-button-SKU-001 swaps to repriced-badge-SKU-001 with the current price updated to the LLM's suggested value (Rs.1,299 -> Rs.1,190). Real Claude responses observed (single-sentence with price + margin). Retry button only renders on error branch — not naturally triggered, code-reviewed in AiRecommendation.jsx and confirmed present.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_opptra_backend.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Filter pill clicks unmount/remount SkuRow components which re-triggers /api/recommend for all visible rows each time the filter changes. Consider lifting recommendation state to App.js (or a small cache keyed by sku.id) so previously-fetched recs are reused — currently a user toggling pills can burn many LLM tokens.",
+    "React StrictMode (dev only) double-invokes the AiRecommendation mount effect, producing one extra POST on clean load (observed 8 calls for 7 SKUs in dev). The shared client-side __chain queue handles it but it wastes one LLM call in dev; consider an in-flight de-dupe keyed by sku.id, or guarding the effect with a ref. No impact in production builds.",
+    "Backend /api/recommend swallows LLM errors and returns 200 with source='fallback'. This is intentional for UX but means the frontend ai-rec-error branch (and retry button) can never be reached in production — could be worth a feature flag or an explicit error mode for QA.",
+    "Server-side price parsing uses the first Rs.<number> >= marginFloor in the sentence. Robust enough for tested cases but may pick a different number than intended if Claude phrases multiple prices; consider asking the model to return JSON or extracting via a stricter pattern.",
+    "Apply button uses `disabled={!recData}` (good). However after Apply, recData stays set — if user could un-apply (not in scope) this would need reset logic."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_opptra_backend.py (created)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "n/a — no auth",
+  "seed_data_creation": "None — 8 hardcoded SKUs ship with the app",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend pytest at /app/backend/tests/test_opptra_backend.py covers health + recommend happy/error paths. For frontend, ALWAYS wait_for_function on document.querySelectorAll('[data-testid^=\"ai-rec-loading-\"]').length === 0 with timeout >= 60000ms before asserting Apply — recs are serialized client-side. Do NOT click triage pills before this wait (it remounts rows and fires fresh LLM calls). SKU-007 is the canonical blocked case (competitorPrice 399 <= marginFloor 420) and must never appear in /api/recommend POST bodies.",
+  "rca_of_the_issue": "No bugs found. Test-time false positive: initial assertion `len(api_calls)==7` failed at 25 because filter pills were clicked first (each click remounts SkuRow -> AiRecommendation re-fires). Re-tested on clean load: 8 POSTs for 7 unique SKUs (1 duplicate from React StrictMode dev double-invoke), SKU-007 never present — matches spec."
+}
