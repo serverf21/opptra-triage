@@ -1,0 +1,119 @@
+{
+  "project_name": "Opptra Pricing Signal Tool",
+  "theme": "DARK",
+  "archetype": "Archetype 4 (Swiss & High-Contrast) - Terminal/Command Center Variant",
+  "typography": {
+    "headings": {
+      "family": "Chivo, sans-serif",
+      "weight": "font-bold",
+      "tracking": "tracking-tight",
+      "usage": "Page titles, card headers, triage numbers"
+    },
+    "body": {
+      "family": "DM Sans, sans-serif",
+      "weight": "font-normal",
+      "usage": "General descriptive text, AI recommendation text"
+    },
+    "data_numerics": {
+      "family": "JetBrains Mono, monospace",
+      "weight": "font-medium",
+      "tracking": "tracking-tighter",
+      "usage": "ALL numeric values, SKU IDs, prices, margins, dates"
+    }
+  },
+  "color_palette": {
+    "background": {
+      "base": "bg-[#050505]",
+      "surface": "bg-[#111111]",
+      "surface_hover": "hover:bg-[#1A1A1A]",
+      "border": "border-[#262626]"
+    },
+    "text": {
+      "primary": "text-[#F5F5F5]",
+      "secondary": "text-[#8B8B96]",
+      "muted": "text-[#52525A]"
+    },
+    "semantic": {
+      "success": "text-[#10B981]",
+      "success_bg": "bg-[#10B981]/10",
+      "danger": "text-[#EF4444]",
+      "danger_bg": "bg-[#EF4444]/10",
+      "warning": "text-[#F59E0B]",
+      "warning_bg": "bg-[#F59E0B]/10",
+      "blocked_surface": "bg-[#291706]",
+      "blocked_border": "border-[#78350F]",
+      "action": "bg-[#007AFF]",
+      "action_hover": "hover:bg-[#005bb5]"
+    }
+  },
+  "surface_strategy": {
+    "style": "The Terminal Look / Grid Borders",
+    "rules": [
+      "No rounded corners on main structural elements (use rounded-none or rounded-sm max).",
+      "Expose the grid: 1px subtle borders (border-[#262626]) separating all rows and columns.",
+      "High contrast semantic colors for financial deltas (red/green).",
+      "Zero drop shadows. Flat, stark, data-first."
+    ]
+  },
+  "layout_and_spacing": {
+    "global": "p-4 md:p-8 max-w-[1400px] mx-auto",
+    "density": "Info-dense. Use tight padding (p-3) inside SKU rows to maximize vertical screen real estate.",
+    "sku_list": "flex flex-col gap-2 (not grid). Each SKU is a horizontal row.",
+    "sku_card_grid": "Internal CSS grid (grid-cols-12 gap-4) ensuring perfect vertical column alignment across all rows."
+  },
+  "components": {
+    "triage_bar": {
+      "description": "Sticky top bar with 3 clickable filter pills.",
+      "styles": "flex gap-2 mb-6 border-b border-[#262626] pb-4 sticky top-0 bg-[#050505] z-50",
+      "pill_styles": "px-4 py-2 text-sm font-medium border border-[#262626] text-[#8B8B96] transition-colors hover:text-white cursor-pointer",
+      "pill_active": "bg-[#111111] text-white border-b-2 border-b-[#007AFF] !border-[#262626]"
+    },
+    "sku_row": {
+      "description": "Dense horizontal row showing SKU data.",
+      "styles": "grid grid-cols-12 gap-4 items-center p-3 border border-[#262626] bg-[#111111] transition-colors hover:bg-[#1A1A1A]",
+      "columns": [
+        "col-span-2: SKU ID (mono) + Brand",
+        "col-span-2: Current vs Comp Price (red/green delta)",
+        "col-span-2: Buy Box Status + Margin Floor",
+        "col-span-1: Days since change",
+        "col-span-4: AI Recommendation (inline)",
+        "col-span-1: Action Button (right aligned)"
+      ]
+    },
+    "ai_recommendation": {
+      "description": "Single sentence Claude-generated insight.",
+      "styles": "text-sm text-[#A3A3A3] flex items-center gap-2",
+      "loading_state": "animate-pulse bg-[#262626] h-4 w-3/4 rounded-sm",
+      "error_state": "text-[#EF4444] text-xs flex items-center gap-1",
+      "icon": "Use Sparkles icon (Lucide) in #007AFF to indicate AI."
+    },
+    "action_button": {
+      "description": "Apply button that transitions to Repriced.",
+      "default_state": "bg-[#007AFF] text-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest",
+      "repriced_state": "bg-[#10B981]/20 text-[#10B981] px-3 py-1.5 text-xs font-bold uppercase flex items-center gap-1"
+    },
+    "blocked_sku": {
+      "description": "Special treatment for SKU-007 (Blocked).",
+      "styles": "bg-[#291706] border-[#78350F] hover:bg-[#291706]",
+      "content_override": "Amber lock icon. Message: 'Competitor is pricing below your margin floor. No action possible — monitor for recovery.' No AI call. No Apply button."
+    }
+  },
+  "motion_and_interactions": {
+    "hover_states": "Row backgrounds lighten slightly. Values remain high contrast.",
+    "apply_transition": "Use Framer Motion to swap Apply button with Repriced (Checkmark) with a quick scale and opacity transition (duration: 0.2s).",
+    "loading": "Fast, technical skeleton pulses (no soft fades, use sharp opacity toggles)."
+  },
+  "assets_and_icons": {
+    "library": "lucide-react",
+    "required_icons": ["Lock", "Check", "Sparkles", "TrendingUp", "TrendingDown", "AlertTriangle"]
+  },
+  "instructions_to_main_agent": [
+    "1. Data Layer: Create an array of 8 hardcoded SKUs with id, brand, ourPrice, competitorPrice, buyBoxStatus, marginFloor, lastChanged. Make sure SKU-007 is configured as 'Blocked'.",
+    "2. Fonts: Import JetBrains Mono and Chivo via Google Fonts in index.css. Apply them according to typography guidelines.",
+    "3. State Management: Implement filtering logic for the Triage Bar (All, Action needed, Opportunity, Blocked).",
+    "4. AI Mock: Implement a mock asynchronous function for the AI recommendation to show the loading skeleton, then resolve to a single sentence string. Include a 10% chance to fail to demonstrate the retry error state.",
+    "5. Layout: Ensure strict column alignment. A table tag <table> is acceptable if grid-cols-12 gets tricky, but Tailwind grid-cols-12 on flex rows is preferred for custom padding.",
+    "6. Testing: ADD 'data-testid' to ALL interactive elements (triage pills, apply buttons, retry buttons).",
+    "7. Styling: Adhere strictly to the dark terminal aesthetics. Do NOT use soft shadows or rounded corners above sm. It must look like a high-end financial tool."
+  ]
+}
