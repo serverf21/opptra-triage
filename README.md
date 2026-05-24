@@ -1,6 +1,6 @@
 # Opptra Pricing Signal
 
-A **decision tool** for Indian e-commerce pricing operations. An operator opens the app, sees which SKUs need attention, reviews **historical, calendar, cross-platform, and inventory signals**, gets a one-sentence AI recommendation, and applies it in under a minute.
+A **pricing decision tool** for Indian e-commerce pricing operations. An operator opens the app, sees which SKUs need attention, reviews **historical, calendar, cross-platform, and inventory signals**, gets a one-sentence AI recommendation, and applies it in under a minute.
 
 ---
 
